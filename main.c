@@ -1,8 +1,10 @@
 #include <stdio.h>
+#include <string.h>
 
 int main() {
     int commandNumber;
-    char newWord [100];
+    char newWord [100]  = {'\0'}; ;
+    char extraWord [100];
     char fileName [50];
     int i = 0;
 
@@ -12,14 +14,22 @@ int main() {
         switch (commandNumber) {
             case 1:
                 printf("Enter text to append:\n");
-                scanf("%s", newWord);
-                printf("Your word have been saved!\n");
+                if (newWord[0]==0){
+                    scanf("%s", newWord);
+                    printf("Your word have been saved!\n");
+                }
+                else{
+                    scanf("%s", extraWord);
+                    strcat(newWord,extraWord);
+                    printf("Your word have been saved!\n");
+                }
+
                 break;
             case 2:
                 while (newWord[i] != 0){
                     i++;
                 }
-                newWord[i] = '\r';
+                newWord[i] = '\n';
                 printf("New line has been added!\n");
                 break;
             case 3:
@@ -29,13 +39,14 @@ int main() {
             case 4:
                 break;
             case 5:
-                printf("%s", newWord);
+                printf("%s \n", newWord);
+                break;
             case 6:
                 break;
             case 7:
                 break;
             default:
-                break;
+                return 0;
         }
     }
     return 0;
