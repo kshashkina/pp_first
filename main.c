@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <windows.h>
 
 // Define a structure for a node in the linked list
 typedef struct Node {
@@ -95,6 +96,11 @@ void freeList(Node* head) {
     }
 }
 
+void CleanWithDelay(int seconds){
+    Sleep(seconds*1000);
+    system("cls");
+};
+
 int main() {
     int commandNumber;
     Node* newWord = NULL; // Initialize the linked list
@@ -102,6 +108,7 @@ int main() {
     char fileName[50];
 
     while (1) {
+        CleanWithDelay(2);
         printf("Choose the command:\n");
         scanf("%d", &commandNumber);
         switch (commandNumber) {
