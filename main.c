@@ -21,9 +21,11 @@ Node* createNode(char data) {
 // Function to insert a node at the end of the linked list
 void insertNodeEnd(Node** head, char data) {
     Node* newNode = createNode(data);
+    // If the list is empty, make the new node the head of the list
     if (*head == NULL) {
         *head = newNode;
     } else {
+        // Otherwise, traverse to the end of the list and insert the new node
         Node* current = *head;
         while (current->next != NULL) {
             current = current->next;
@@ -33,47 +35,50 @@ void insertNodeEnd(Node** head, char data) {
 }
 
 // Function to insert a node at a specific position in the linked list
+// Function to insert a string at a specific position in the linked list
 void insertStringAtPosition(Node** head, const char* str, int line, int index) {
-    Node* current = *head;
-    Node* prev = NULL;
-    int currentLine = 0;
-    int currentPosition = 0;
+    Node* current = *head; // Start at the head of the list
+    Node* prev = NULL;     // Pointer to the previous node
+    int currentLine = 0;   // Current line number
+    int currentPosition = 0; // Current position within the line
 
+    // Traverse the list to find the specified line and index
     while (current != NULL) {
         if (currentLine == line && currentPosition == index) {
+            // Insert the characters from the string into the list
             for (int i = 0; str[i] != '\0'; i++) {
                 Node* newNode = createNode(str[i]);
                 newNode->next = current;
                 if (prev == NULL) {
-                    *head = newNode;
+                    *head = newNode; // Update the head if inserting at the beginning
                 } else {
-                    prev->next = newNode;
+                    prev->next = newNode; // Update the previous node's next pointer
                 }
-                prev = newNode;
+                prev = newNode; // Update the previous node to the newly inserted node
             }
             return; // Insertion complete
         }
 
         if (current->data == '\n') {
-            currentLine++;
-            currentPosition = 0;
+            currentLine++; // Move to the next line
+            currentPosition = 0; // Reset the position within the line
         } else {
-            currentPosition++;
+            currentPosition++; // Move to the next character within the line
         }
 
-        prev = current;
-        current = current->next;
+        prev = current; // Update the previous node
+        current = current->next; // Move to the next node
     }
 
-    // If the line or index is out of bounds, insert at the end
+    // If the line or index is out of bounds, insert at the end of the list
     for (int i = 0; str[i] != '\0'; i++) {
         Node* newNode = createNode(str[i]);
         if (prev != NULL) {
             prev->next = newNode;
         } else {
-            *head = newNode;
+            *head = newNode; // Update the head if inserting at the beginning
         }
-        prev = newNode;
+        prev = newNode; // Update the previous node
     }
 }
 // Function to display the linked list
