@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 // Define a structure for a node in the linked list
 typedef struct Node {
@@ -97,7 +98,7 @@ void freeList(Node* head) {
 int main() {
     int commandNumber;
     Node* newWord = NULL; // Initialize the linked list
-    char inputLine[100];
+    char inputLine[100]  = {'\0'};
     char fileName[50];
 
     while (1) {
@@ -123,7 +124,6 @@ int main() {
                 if (file == NULL) {
                     printf("Failed to open the file for writing.\n");
                 } else {
-                    displayList(newWord);
                     Node* current = newWord;
                     while (current != NULL) {
                         fputc(current->data, file);
@@ -147,6 +147,7 @@ int main() {
                         putchar(ch);
                     }
                     fclose(file);
+                    printf("\n");
                 }
             }
                 break;
@@ -165,12 +166,48 @@ int main() {
             }
                 break;
             case 7:
+            {
+                printf("Enter the substring to search for:\n");
+                scanf(" %[^\n]s", inputLine);
+
+                Node* current = newWord;
+                int lineIndex = 0;
+                int line = 0;
+                bool found = false;
+
+                while (current != NULL) {
+                    if (current->data == '\n') {
+                        line++;
+                        lineIndex = 0;
+                        current = current -> next;
+                    } else if (current->data == inputLine[0]) {
+                        int inputIndex = 0;
+                        while (current->data == inputLine[inputIndex]) {
+                            current = current->next;
+                            inputIndex++;
+                            if (inputLine[inputIndex] == '\0') {
+                                printf("Found at line %d and index %d\n", line, lineIndex);
+                                found = true;
+                                lineIndex += inputIndex;
+                                break;
+                            }
+                        }
+                    } else {
+                        current = current->next;
+                        lineIndex++;
+                    }
+                }
+
+                if (!found) {
+                    printf("Substring not found.\n");
+                    break;
+                }
                 break;
+            }
             default:
                 // Free the linked list before exiting
                 freeList(newWord);
                 return 0;
         }
     }
-    return 0;
 }
