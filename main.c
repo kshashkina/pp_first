@@ -119,8 +119,36 @@ int main() {
             case 3:
                 printf("Enter the file name for saving:\n");
                 scanf("%s", fileName);
-                printf("Name has been saved! \n");
+                FILE *file = fopen(fileName, "w");
+                if (file == NULL) {
+                    printf("Failed to open the file for writing.\n");
+                } else {
+                    displayList(newWord);
+                    Node* current = newWord;
+                    while (current != NULL) {
+                        fputc(current->data, file);
+                        current = current->next;
+                    }
+                    fclose(file);
+                    printf("Data has been saved to the file.\n");
+                }
+                break;
             case 4:
+            {
+                printf("Enter the file name to read:\n");
+                scanf("%s", fileName);
+                FILE* file = fopen(fileName, "r");
+
+                if (file == NULL) {
+                    printf("Failed to open the file for reading.\n");
+                } else {
+                    char ch;
+                    while ((ch = fgetc(file)) != EOF) {
+                        putchar(ch);
+                    }
+                    fclose(file);
+                }
+            }
                 break;
             case 5:
                 displayList(newWord);
