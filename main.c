@@ -31,28 +31,49 @@ void insertNodeEnd(Node** head, char data) {
 }
 
 // Function to insert a node at a specific position in the linked list
-void insertNodeAtPosition(Node** head, char data, int position) {
-    Node* newNode = createNode(data);
+void insertStringAtPosition(Node** head, const char* str, int line, int index) {
+    Node* current = *head;
+    Node* prev = NULL;
+    int currentLine = 0;
+    int currentPosition = 0;
 
-    if (position == 0) {
-        newNode->next = *head;
-        *head = newNode;
-    } else {
-        Node* current = *head;
-        int i;
-        for (i = 0; i < position - 1 && current != NULL; i++) {
-            current = current->next;
+    while (current != NULL) {
+        if (currentLine == line && currentPosition == index) {
+            for (int i = 0; str[i] != '\0'; i++) {
+                Node* newNode = createNode(str[i]);
+                newNode->next = current;
+                if (prev == NULL) {
+                    *head = newNode;
+                } else {
+                    prev->next = newNode;
+                }
+                prev = newNode;
+            }
+            return; // Insertion complete
         }
-        if (current != NULL) {
-            newNode->next = current->next;
-            current->next = newNode;
+
+        if (current->data == '\n') {
+            currentLine++;
+            currentPosition = 0;
         } else {
-            printf("Invalid position.\n");
-            free(newNode);
+            currentPosition++;
         }
+
+        prev = current;
+        current = current->next;
+    }
+
+    // If the line or index is out of bounds, insert at the end
+    for (int i = 0; str[i] != '\0'; i++) {
+        Node* newNode = createNode(str[i]);
+        if (prev != NULL) {
+            prev->next = newNode;
+        } else {
+            *head = newNode;
+        }
+        prev = newNode;
     }
 }
-
 // Function to display the linked list
 void displayList(Node* head) {
     Node* current = head;
@@ -80,7 +101,7 @@ int main() {
     char fileName[50];
 
     while (1) {
-        printf("Write your command:\n");
+        printf("Choose the command:\n");
         scanf("%d", &commandNumber);
         switch (commandNumber) {
             case 1:
@@ -105,10 +126,21 @@ int main() {
                 displayList(newWord);
                 break;
             case 6:
+            {
+                int line, index;
+                printf("Choose line and index: ");
+                scanf("%d %d", &line, &index);
+                printf("Enter text to insert: ");
+                scanf(" %[^\n]s", inputLine);
+                insertStringAtPosition(&newWord, inputLine, line, index);
+                printf("Text has been inserted!\n");
+            }
                 break;
             case 7:
                 break;
             default:
+                // Free the linked list before exiting
+                freeList(newWord);
                 return 0;
         }
     }
